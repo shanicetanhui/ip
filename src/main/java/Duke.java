@@ -17,10 +17,11 @@ public class Duke {
         System.out.println("____________________________________________________________");
 
         Scanner sc = new Scanner(System.in);
-        String input;
+        String[] tasks = new String[100];
+        int taskCount = 0;
 
         while (true) {
-            input = sc.nextLine();
+            String input = sc.nextLine();
 
             // Exit if user types "bye"
             if (input.equals("bye")) {
@@ -30,12 +31,23 @@ public class Duke {
                 break;
             }
 
-            // Echo
-            System.out.println("____________________________________________________________");
-            System.out.println(input);
-            System.out.println("____________________________________________________________");
-        }
+            // Display all tasks entered so far
+            if (input.equals("list")) {
+                System.out.println("____________________________________________________________");
+                for (int i = 0; i < taskCount; i++) {
+                    System.out.println((i + 1) + ". " + tasks[i]);
+                }
+                System.out.println("____________________________________________________________");
+            } else {
+                // Add task to list
+                tasks[taskCount] = input;
+                taskCount++;
 
+                System.out.println("____________________________________________________________");
+                System.out.println(" added: " + input);
+                System.out.println("____________________________________________________________");
+            }
+        }
         sc.close();
     }
 }
