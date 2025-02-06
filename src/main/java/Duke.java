@@ -96,7 +96,7 @@ public class Duke {
                 System.out.println("   " + tasks[taskNumber]);
                 System.out.println("____________________________________________________________");
 
-                // Add task to list
+            // Add task to list
             } else {
                 Task task = new Task(input);
                 tasks[taskCount] = task;
