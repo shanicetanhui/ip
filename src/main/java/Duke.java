@@ -17,11 +17,12 @@ public class Duke {
         System.out.println("____________________________________________________________");
 
         Scanner sc = new Scanner(System.in);
-        String[] tasks = new String[100];
+        Task[] taskList = new Task[100];
         int taskCount = 0;
 
         while (true) {
             String input = sc.nextLine();
+            String[] inputParts = input.split(" ", 2);
 
             // Exit if user types "bye"
             if (input.equals("bye")) {
@@ -35,14 +36,30 @@ public class Duke {
             if (input.equals("list")) {
                 System.out.println("____________________________________________________________");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ". " + tasks[i]);
+                    System.out.println((i + 1) + ". " + taskList[i]);
                 }
+                System.out.println("____________________________________________________________");
+
+            // Marking task
+            } else if (inputParts[0].equals("mark")) {
+                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
+                taskList[taskNumber].markAsDone();
+                System.out.println("____________________________________________________________");
+                System.out.println(" Nice! I've marked this task as done:");
+                System.out.println("   " + taskList[taskNumber]);
+                System.out.println("____________________________________________________________");
+            } else if (inputParts[0].equals("unmark")) {
+                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
+                taskList[taskNumber].markAsNotDone();
+                System.out.println("____________________________________________________________");
+                System.out.println(" OK, I've marked this task as not done yet:");
+                System.out.println("   " + taskList[taskNumber]);
                 System.out.println("____________________________________________________________");
             } else {
                 // Add task to list
-                tasks[taskCount] = input;
+                Task task = new Task(input);
+                taskList[taskCount] = task;
                 taskCount++;
-
                 System.out.println("____________________________________________________________");
                 System.out.println(" added: " + input);
                 System.out.println("____________________________________________________________");
