@@ -23,6 +23,7 @@ public class Duke {
         while (true) {
             String input = sc.nextLine();
             String[] inputParts = input.split(" ", 2);
+            String command = inputParts[0];
 
             // Exit if user types "bye"
             if (input.equals("bye")) {
@@ -33,80 +34,112 @@ public class Duke {
             }
 
             // Display all tasks entered so far
-            if (input.equals("list")) {
+            if (command.equals("list")) {
                 System.out.println("____________________________________________________________");
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ". " + tasks[i]);
+                if (taskCount == 0) {
+                    System.out.println("No tasks found! Start your list today.");
+                } else {
+                    for (int i = 0; i < taskCount; i++) {
+                        System.out.println((i + 1) + ". " + tasks[i]);
+                    }
                 }
                 System.out.println("____________________________________________________________");
 
             // To Do tasks
-            } else if (inputParts[0].equals("todo")) {
-                String description = inputParts[1];
-                tasks[taskCount] = new ToDo(description);
-                taskCount++;
-
-                System.out.println("Got it. I've added this task:");
-                System.out.println(tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
-                System.out.println("____________________________________________________________");
+            } else if (command.equals("todo")) {
+                if (inputParts.length < 2 || inputParts[1].trim().isEmpty()) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" The description of a todo cannot be empty.");
+                    System.out.println("____________________________________________________________");
+                } else {
+                    Task todo = new ToDo(inputParts[1]);  // Create new todo
+                    taskCount = getTaskCount(tasks, taskCount, todo);
+                }
 
             // Deadline tasks
-            } else if (inputParts[0].equals("deadline")) {
-                String[] parts = inputParts[1].split("/by");
-                String description = parts[0].trim();
-                String by = parts[1].trim();
-                tasks[taskCount] = new Deadline(description, by);
-                taskCount++;
-                System.out.println("____________________________________________________________");
-                System.out.println("Got it. I've added this task:");
-                System.out.println(tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
-                System.out.println("____________________________________________________________");
+            } else if (command.equals("deadline")) {
+                if (inputParts.length < 2 || !inputParts[1].contains("/by")) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" The description of a deadline must contain '/by'.");
+                    System.out.println("____________________________________________________________");
+                } else {
+                    String[] descAndTime = inputParts[1].split("/by", 2);
+                    Task deadline = new Deadline(descAndTime[0].trim(), descAndTime[1].trim());
+                    taskCount = getTaskCount(tasks, taskCount, deadline);
+                }
 
             // Event tasks
-            } else if (inputParts[0].equals("event")) {
-                String[] parts = inputParts[1].split("/from");
-                String description = parts[0].trim();
-                String[] dateParts = parts[1].split("/to");
-                String from = dateParts[0].trim();
-                String to = dateParts[1].trim();
-                tasks[taskCount] = new Event(description, from, to);
-                taskCount++;
-                System.out.println("____________________________________________________________");
-                System.out.println("Got it. I've added this task:");
-                System.out.println(tasks[taskCount - 1]);
-                System.out.println("Now you have " + taskCount + " tasks in the list.");
-                System.out.println("____________________________________________________________");
+            } else if (command.equals("event")) {
+                if (inputParts.length < 2 || !inputParts[1].contains("/from") || !inputParts[1].contains("/to")) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" The description of an event must contain '/from' and '/to'.");
+                    System.out.println("____________________________________________________________");
+                } else {
+                    String[] eventDetails = inputParts[1].split("/from|/to", 3);
+                    Task event = new Event(eventDetails[0].trim(), eventDetails[1].trim(), eventDetails[2].trim());
+                    taskCount = getTaskCount(tasks, taskCount, event);
+                }
 
             // Marking tasks
-            } else if (inputParts[0].equals("mark")) {
-                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
-                tasks[taskNumber].markAsDone();
-                System.out.println("____________________________________________________________");
-                System.out.println(" Nice! I've marked this task as done:");
-                System.out.println("   " + tasks[taskNumber]);
-                System.out.println("____________________________________________________________");
+            } else if (command.equals("mark")) {
+                if (inputParts.length < 2 || inputParts[1].isEmpty()) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" Specify a task number to mark.");
+                    System.out.println("____________________________________________________________");
+                    continue;
+                }
+                try {
+                    int taskNumber = Integer.parseInt(inputParts[1]) - 1;
+                    tasks[taskNumber].markAsDone();
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" Nice! I've marked this task as done:");
+                    System.out.println("   " + tasks[taskNumber]);
+                    System.out.println("____________________________________________________________");
+                } catch (Exception e) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" Invalid task number.");
+                    System.out.println("____________________________________________________________");
+                }
+            } else if (command.equals("unmark")) {
+                if (inputParts.length < 2 || inputParts[1].isEmpty()) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" You need to specify a task number to unmark.");
+                    System.out.println("____________________________________________________________");
+                    continue;
+                }
+                try {
+                    int taskNumber = Integer.parseInt(inputParts[1]) - 1;
+                    tasks[taskNumber].markAsNotDone();
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" OK, I've marked this task as not done yet:");
+                    System.out.println("   " + tasks[taskNumber]);
+                    System.out.println("____________________________________________________________");
+                } catch (Exception e) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" Invalid task number.");
+                    System.out.println("____________________________________________________________");
+                }
 
-            } else if (inputParts[0].equals("unmark")) {
-                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
-                tasks[taskNumber].markAsNotDone();
-                System.out.println("____________________________________________________________");
-                System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   " + tasks[taskNumber]);
-                System.out.println("____________________________________________________________");
-
-            // Add task to list
+            // Unknown command
             } else {
-                Task task = new Task(input);
-                tasks[taskCount] = task;
-                taskCount++;
                 System.out.println("____________________________________________________________");
-                System.out.println(" added: " + input);
+                System.out.println(" What does this mean??");
                 System.out.println("____________________________________________________________");
             }
+
         }
 
         sc.close();
+    }
+
+    private static int getTaskCount(Task[] tasks, int taskCount, Task event) {
+        tasks[taskCount] = event;
+        taskCount++;
+        System.out.println("____________________________________________________________");
+        System.out.println(" Got it. I've added this task:");
+        System.out.println("   " + event);
+        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+        System.out.println("____________________________________________________________");
+        return taskCount;
     }
 }
