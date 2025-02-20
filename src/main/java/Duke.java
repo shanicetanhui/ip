@@ -120,22 +120,6 @@ public class Duke {
                     System.out.println("____________________________________________________________");
                 }
 
-            } else if (inputParts[0].equals("delete")) {
-                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
-
-                System.out.println("____________________________________________________________");
-                System.out.println(" Noted. I've removed this task:");
-                System.out.println("   " + tasks[taskNumber]);
-
-                for (int i = taskNumber; i < taskCount - 1; i++) {
-                    tasks[i] = tasks[i + 1];
-                }
-                tasks[taskCount - 1] = null;
-                taskCount--;
-
-                System.out.println(" Now you have " + taskCount + " tasks in the list.");
-                System.out.println("____________________________________________________________");
-
             // Unknown command
             } else {
                 System.out.println("____________________________________________________________");
