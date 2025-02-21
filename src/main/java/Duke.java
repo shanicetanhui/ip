@@ -135,116 +135,128 @@ public class Duke {
                     System.out.println(" Invalid task number.");
                     System.out.println("____________________________________________________________");
                 }
+            }
 
-<<<<<<< HEAD
-            } else if (inputParts[0].equals("delete")) {
-                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
+            case "delete" -> {
+                if (inputParts.length < 2 || inputParts[1].isEmpty()) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println(" You need to specify a task number to delete.");
+                    System.out.println("____________________________________________________________");
+                } else {
+                    try {
+                        int taskNumber = Integer.parseInt(inputParts[1]) - 1;
+                        if (taskNumber >= 0 && taskNumber < taskCount) {
+                            System.out.println("____________________________________________________________");
+                            System.out.println(" Noted. I've removed this task:");
+                            System.out.println("   " + tasks[taskNumber]);
 
-                System.out.println("____________________________________________________________");
-                System.out.println(" Noted. I've removed this task:");
-                System.out.println("   " + tasks[taskNumber]);
+                            // Shift tasks after the deleted one
+                            for (int i = taskNumber; i < taskCount - 1; i++) {
+                                tasks[i] = tasks[i + 1];
+                            }
 
-                for (int i = taskNumber; i < taskCount - 1; i++) {
-                    tasks[i] = tasks[i + 1];
+                            tasks[taskCount - 1] = null;
+                            taskCount--;
+                            saveTasks(tasks, taskCount);
+
+                            System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                            System.out.println("____________________________________________________________");
+                        } else {
+                            System.out.println("____________________________________________________________");
+                            System.out.println(" Invalid task number.");
+                            System.out.println("____________________________________________________________");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("____________________________________________________________");
+                        System.out.println(" Invalid task number format.");
+                        System.out.println("____________________________________________________________");
+                    }
                 }
-
-                tasks[taskCount - 1] = null;
-                taskCount--;
-
-                System.out.println(" Now you have " + taskCount + " tasks in the list.");
-                System.out.println("____________________________________________________________");
+            }
 
             // Unknown command
-            } else {
-=======
-                // Unknown command
-            }
             default -> {
->>>>>>> branch-Level-7
+
                 System.out.println("____________________________________________________________");
                 System.out.println(" What does this mean??");
                 System.out.println("____________________________________________________________");
             }
-<<<<<<< HEAD
-=======
             }
->>>>>>> branch-Level-7
         }
-
         sc.close();
     }
 
-    private static int getTaskCount(Task[] tasks, int taskCount, Task event) {
-        tasks[taskCount] = event;
-        taskCount++;
-        System.out.println("____________________________________________________________");
-        System.out.println(" Got it. I've added this task:");
-        System.out.println("   " + event);
-        System.out.println(" Now you have " + taskCount + " tasks in the list.");
-        System.out.println("____________________________________________________________");
-        return taskCount;
-    }
-
-    private static void saveTasks(Task[] tasks, int taskCount) {
-        try {
-            File file = new File(FILE_PATH);
-            boolean dirsCreated = file.getParentFile().mkdirs(); // Create parent directories if they don't exist
-            if (dirsCreated) {
-                System.out.println("Directories created successfully.");
-            } else if (!file.getParentFile().exists()) {
-                System.out.println("Failed to create directories.");
-            }
-            FileWriter writer = new FileWriter(file);
-            for (int i = 0; i < taskCount; i++) {
-                writer.write(tasks[i].toSaveFormat() + "\n");
-            }
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("Error saving tasks to file.");
-        }
-    }
-
-    private static int loadTasks(Task[] tasks) {
-        int taskCount = 0;
-        try {
-            File file = new File(FILE_PATH);
-            if (file.exists()) {
-                System.out.println("No previous task data found. Starting with a new task list.");
-                return taskCount;  // No file, so return with taskCount = 0
-            }
-
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();
-                String[] parts = line.split(" \\| ");
-                String type = parts[0];
-                boolean isDone = parts[1].equals("1");
-                String description = parts[2];
-
-                switch (type) {
-                case "T":
-                    tasks[taskCount] = new ToDo(description);
-                    break;
-                case "D":
-                    String by = parts[3];
-                    tasks[taskCount] = new Deadline(description, by);
-                    break;
-                case "E":
-                    String from = parts[3];
-                    String to = parts[4];
-                    tasks[taskCount] = new Event(description, from, to);
-                    break;
-                }
-
-                if (isDone) {
-                    tasks[taskCount].markAsDone();
-                }
+            private static int getTaskCount (Task[]tasks,int taskCount, Task event){
+                tasks[taskCount] = event;
                 taskCount++;
+                System.out.println("____________________________________________________________");
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + event);
+                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println("____________________________________________________________");
+                return taskCount;
             }
-            sc.close();
-        } catch (IOException e) {
-            System.out.println("Error loading tasks from file.");
+
+            private static void saveTasks (Task[]tasks,int taskCount){
+                try {
+                    File file = new File(FILE_PATH);
+                    boolean dirsCreated = file.getParentFile().mkdirs(); // Create parent directories if they don't exist
+                    if (dirsCreated) {
+                        System.out.println("Directories created successfully.");
+                    } else if (!file.getParentFile().exists()) {
+                        System.out.println("Failed to create directories.");
+                    }
+                    FileWriter writer = new FileWriter(file);
+                    for (int i = 0; i < taskCount; i++) {
+                        writer.write(tasks[i].toSaveFormat() + "\n");
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    System.out.println("Error saving tasks to file.");
+                }
+            }
+
+            private static int loadTasks (Task[]tasks){
+                int taskCount = 0;
+                try {
+                    File file = new File(FILE_PATH);
+                    if (file.exists()) {
+                        System.out.println("No previous task data found. Starting with a new task list.");
+                        return taskCount;  // No file, so return with taskCount = 0
+                    }
+
+                    Scanner sc = new Scanner(file);
+                    while (sc.hasNextLine()) {
+                        String line = sc.nextLine();
+                        String[] parts = line.split(" \\| ");
+                        String type = parts[0];
+                        boolean isDone = parts[1].equals("1");
+                        String description = parts[2];
+
+                        switch (type) {
+                        case "T":
+                            tasks[taskCount] = new ToDo(description);
+                            break;
+                        case "D":
+                            String by = parts[3];
+                            tasks[taskCount] = new Deadline(description, by);
+                            break;
+                        case "E":
+                            String from = parts[3];
+                            String to = parts[4];
+                            tasks[taskCount] = new Event(description, from, to);
+                            break;
+                        }
+
+                        if (isDone) {
+                            tasks[taskCount].markAsDone();
+                        }
+                        taskCount++;
+                    }
+                    sc.close();
+                } catch (IOException e) {
+                    System.out.println("Error loading tasks from file.");
+                }
+                return taskCount;
+            }
         }
-        return taskCount;
-    }
-}
