@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Duke {
-    private static final String FILE_PATH = "./data/duke.txt"; // Relative path to save file
+    private static final String FILE_PATH = "/Users/shanice/CS2113/ip/data/duke.txt"; // Relative path to save file
 
     public static void main(String[] args) {
         String logo = " ____            _         \n"
@@ -203,14 +203,14 @@ public class Duke {
                     boolean dirsCreated = file.getParentFile().mkdirs(); // Create parent directories if they don't exist
                     if (dirsCreated) {
                         System.out.println("Directories created successfully.");
-                    } else if (!file.getParentFile().exists()) {
-                        System.out.println("Failed to create directories.");
                     }
+
                     FileWriter writer = new FileWriter(file);
                     for (int i = 0; i < taskCount; i++) {
                         writer.write(tasks[i].toSaveFormat() + "\n");
                     }
                     writer.close();
+                    // System.out.println("Tasks successfully saved to " + FILE_PATH);
                 } catch (IOException e) {
                     System.out.println("Error saving tasks to file.");
                 }
@@ -220,10 +220,12 @@ public class Duke {
                 int taskCount = 0;
                 try {
                     File file = new File(FILE_PATH);
-                    if (file.exists()) {
+                    if (!file.exists()) {
                         System.out.println("No previous task data found. Starting with a new task list.");
                         return taskCount;  // No file, so return with taskCount = 0
-                    }
+                    } /* else {
+                        System.out.println("Loading tasks from " + FILE_PATH);
+                    } */
 
                     Scanner sc = new Scanner(file);
                     while (sc.hasNextLine()) {
@@ -254,6 +256,7 @@ public class Duke {
                         taskCount++;
                     }
                     sc.close();
+                    System.out.println("Tasks successfully loaded from " + FILE_PATH);
                 } catch (IOException e) {
                     System.out.println("Error loading tasks from file.");
                 }
