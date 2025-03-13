@@ -15,6 +15,10 @@ public class Task {
         isDone = false;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String toSaveFormat() {
         return (this instanceof ToDo ? "T" : this instanceof Deadline ? "D" : "E")
                 + " | " + (isDone ? "1" : "0") + " | " + description;

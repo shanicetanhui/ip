@@ -1,0 +1,3 @@
+T | 0 | book
+T | 0 | book again
+T | 0 | no bk

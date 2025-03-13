@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Parser {
     public boolean parseCommand(String input, TaskList taskList, Ui ui, Storage storage) {
         String[] parts = input.split(" ", 2);
@@ -102,6 +104,26 @@ public class Parser {
                     }
                 } catch (NumberFormatException e) {
                     ui.showMessage("Invalid task number format.");
+                }
+            }
+            break;
+        }
+
+        case "find": {
+            if (parts.length < 2 || parts[1].trim().isEmpty()) {
+                ui.showMessage("Please provide a keyword to search for.");
+            } else {
+                String keyword = parts[1].trim();
+                List<Task> matchingTasks = taskList.findTasks(keyword);
+
+                if (matchingTasks.isEmpty()) {
+                    ui.showMessage("No matching tasks found.");
+                } else {
+                    StringBuilder result = new StringBuilder("Here are the matching tasks in your list:\n");
+                    for (int i = 0; i < matchingTasks.size(); i++) {
+                        result.append((i + 1)).append(". ").append(matchingTasks.get(i)).append("\n");
+                    }
+                    ui.showMessage(result.toString().trim());
                 }
             }
             break;
