@@ -1,6 +1,22 @@
+/**
+ * The {@code Parser} class is responsible for interpreting and executing user commands.
+ * It processes user input and performs corresponding actions on the {@link TaskList}.
+ */
+
 import java.util.List;
 
 public class Parser {
+
+    /**
+     * Parses the user's command and executes the corresponding action.
+     *
+     * @param input   The user input command.
+     * @param taskList The task list to perform operations on.
+     * @param ui      The UI handler for displaying messages.
+     * @param storage The storage handler for saving and loading tasks.
+     * @return {@code false} if the command is "bye" (to exit the application),
+     *         otherwise {@code true} to continue running the program.
+     */
     public boolean parseCommand(String input, TaskList taskList, Ui ui, Storage storage) {
         String[] parts = input.split(" ", 2);
         String command = parts[0];
