@@ -1,12 +1,12 @@
 import java.util.List;
 
-public class Duke {
+public class Pesto {
     private Storage storage;
     private TaskList taskList;
     private Ui ui;
     private Parser parser;
 
-    public Duke(String filePath) {
+    public Pesto(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
         parser = new Parser();
@@ -28,6 +28,6 @@ public class Duke {
     }
 
     public static void main(String[] args) {
-        new Duke("data/duke.txt").run();
+        new Pesto("data/pesto.txt").run();
     }
 }
