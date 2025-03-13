@@ -7,16 +7,12 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getStatusIcon() {
-        return (isDone ? "[X]" : "[ ]"); // mark done task with X
-    }
-
     public void markAsDone() {
-        this.isDone = true;
+        isDone = true;
     }
 
     public void markAsNotDone() {
-        this.isDone = false;
+        isDone = false;
     }
 
     public String toSaveFormat() {
@@ -24,8 +20,7 @@ public class Task {
                 + " | " + (isDone ? "1" : "0") + " | " + description;
     }
 
-    @Override
     public String toString() {
-        return getStatusIcon() + " " + description;
+        return (isDone ? "[X] " : "[ ] ") + description;
     }
 }
